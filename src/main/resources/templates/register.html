@@ -44,10 +44,10 @@
                         </h1>
                     </div>
                     <div class="myForm">
-                        <!-- HATA MESAJI BURADA GÖRÜNTÜLENECEK -->
-                        <div th:if="${error}" class="alert alert-danger">
-                            <span th:text="${error}"></span>
-                        </div>
+<!--                        &lt;!&ndash; HATA MESAJI BURADA GÖRÜNTÜLENECEK &ndash;&gt;-->
+<!--                        <div th:if="${error}" class="alert alert-danger">-->
+<!--                            <span th:text="${error}"></span>-->
+<!--                        </div>-->
 
                         <form
                                 th:action="@{/register/new}"
@@ -55,6 +55,17 @@
                                 method="post"
                         >
                             <div class="box-body bozero mx2p">
+                                <!-- Error message display -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div th:if="${error}" class="alert alert-danger" role="alert">
+                                                <p th:text="${error}"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End error message display -->
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
