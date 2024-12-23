@@ -1,9 +1,7 @@
 package com.jobportal.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
@@ -14,10 +12,10 @@ public class RecruiterProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long recruiterProfileId;
+    private Long userAccountId;
 
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="user_account_id")
+    @OneToOne
+    @JoinColumn(name = "user_account_id")
     @MapsId
     private User userId;
 
@@ -28,8 +26,23 @@ public class RecruiterProfile {
     private String country;
     private String company;
 
-    @Column(length=64, nullable=true)
-    private String profilePhotoUrl;
+    @Column(nullable = true, length = 64)
+    private String profilePhoto;
+
+    public RecruiterProfile() {
+    }
+
+    public RecruiterProfile(Long userAccountId, User userId, String firstName, String lastName, String city, String state, String country, String company, String profilePhoto) {
+        this.userAccountId = userAccountId;
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.company = company;
+        this.profilePhoto = profilePhoto;
+    }
 
     public RecruiterProfile(User user) {
         this.userId = user;

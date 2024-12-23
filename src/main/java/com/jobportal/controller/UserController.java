@@ -50,10 +50,8 @@ public class UserController {
             model.addAttribute("user", new User());
             return "register";
         }
-        else {
-            userService.addNew(user);
-            return "dashboard";
-        }
+        userService.addNew(user);
+        return "redirect:/dashboard/";
     }
     @GetMapping("/login")
     public String login() {
