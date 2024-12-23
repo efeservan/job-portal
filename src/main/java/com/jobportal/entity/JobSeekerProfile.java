@@ -40,8 +40,8 @@ public class JobSeekerProfile {
 
     private String resume;
 
-    @Column(length=64, nullable=true)
-    private String profilePhotoUrl;
+    @Column(nullable = true, length = 64)
+    private String profilePhoto;
 
     @OneToMany(cascade=CascadeType.ALL, targetEntity = Skill.class, mappedBy = "jobSeekerProfile")
     private List<Skill> skills;

@@ -8,7 +8,6 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,8 +24,7 @@ public class WebSecurityConfig {
         this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
     }
 
-    private final String[] publicUrls = {
-            "/login",
+    private final String[] publicUrl = {"/",
             "/global-search/**",
             "/register",
             "/register/**",
@@ -39,7 +37,6 @@ public class WebSecurityConfig {
             "/*.css",
             "/*.js",
             "/*.js.map",
-            "/images/**",
             "/fonts**", "/favicon.ico", "/resources/**", "/error"};
 
     @Bean
@@ -47,36 +44,29 @@ public class WebSecurityConfig {
 
         http.authenticationProvider(authenticationProvider());
 
-        http.authorizeHttpRequests(auth ->{
-            auth.requestMatchers(publicUrls).permitAll();
+        http.authorizeHttpRequests(auth -> {
+            auth.requestMatchers(publicUrl).permitAll();
             auth.anyRequest().authenticated();
         });
 
         http.formLogin(form->form.loginPage("/login").permitAll()
-                .successHandler(customAuthenticationSuccessHandler))
-                .logout(logout ->{
+                        .successHandler(customAuthenticationSuccessHandler))
+                .logout(logout-> {
                     logout.logoutUrl("/logout");
                     logout.logoutSuccessUrl("/");
                 }).cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable);
-
-        http.cors(cors -> cors.configurationSource(request -> {
-            var config = new org.springframework.web.cors.CorsConfiguration();
-            config.addAllowedOrigin("http://localhost:8096"); // Statik dosyaların sunulduğu port
-            config.addAllowedMethod("*"); // Tüm HTTP metodlarına izin ver
-            config.addAllowedHeader("*"); // Tüm başlıklara izin ver
-            return config;
-        }));
+                .csrf(csrf->csrf.disable());
 
         return http.build();
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setPasswordEncoder(passwordEncoder());
-        authProvider.setUserDetailsService(customUserDetailsService);
-        return authProvider;
+
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        authenticationProvider.setUserDetailsService(customUserDetailsService);
+        return authenticationProvider;
     }
 
     @Bean
