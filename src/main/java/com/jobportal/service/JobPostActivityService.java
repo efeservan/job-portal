@@ -7,7 +7,6 @@ import com.jobportal.entity.JobLocation;
 import com.jobportal.entity.JobPostActivity;
 import com.jobportal.repository.JobPostActivityRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

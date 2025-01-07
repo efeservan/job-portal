@@ -36,20 +36,14 @@ public class RecruiterProfileController {
     @GetMapping("/")
     public String recruiterProfile(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication != null && authentication.isAuthenticated()) {
-//            String currentUserName = authentication.getName();
-//            System.out.println("Authenticated user: " + currentUserName);
-//        } else {
-//            System.out.println("User is not authenticated");
-//        }     DENEMEK İCİN CALISTIR
 
-        if(!(authentication instanceof AnonymousAuthenticationToken) ){
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUserName = authentication.getName();
             User user = userRepository.findByEmail(currentUserName).orElseThrow(
-                    ()->new UsernameNotFoundException("User Not Found: "+currentUserName));
+                    () -> new UsernameNotFoundException("User Not Found: " + currentUserName));
             Optional<RecruiterProfile> recruiterProfile =
                     recruiterProfileService.getRecruiterProfile(user.getUserId());
-            if(!recruiterProfile.isEmpty()){
+            if (!recruiterProfile.isEmpty()) {
                 model.addAttribute("profile", recruiterProfile.get());
             }
         }
@@ -60,25 +54,24 @@ public class RecruiterProfileController {
     public String addNew(RecruiterProfile recruiterProfile, @RequestParam("image") MultipartFile multipartfile,
                          Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(!(authentication instanceof AnonymousAuthenticationToken) ){
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUserName = authentication.getName();
             User user = userRepository.findByEmail(currentUserName).orElseThrow(
-                    ()->new UsernameNotFoundException("User Not Found: "+currentUserName));
+                    () -> new UsernameNotFoundException("User Not Found: " + currentUserName));
             recruiterProfile.setUserId(user);
             recruiterProfile.setUserAccountId(user.getUserId());
         }
         model.addAttribute("profile", recruiterProfile);
         String filename = "";
-        if(!multipartfile.getOriginalFilename().equals("")){
+        if (!multipartfile.getOriginalFilename().equals("")) {
             filename = StringUtils.cleanPath(Objects.requireNonNull(multipartfile.getOriginalFilename()));
             recruiterProfile.setProfilePhoto(filename);
         }
         RecruiterProfile savedUser = recruiterProfileService.addNew(recruiterProfile);
         String uploadDir = "photos/recruiter/" + savedUser.getUserAccountId();
-        try{
+        try {
             FileUploadUtil.saveFile(uploadDir, filename, multipartfile);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "redirect:/dashboard/";

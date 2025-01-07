@@ -13,17 +13,16 @@ public class FileUploadUtil {
 
     public static void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException {
         Path uploadPath = Paths.get(uploadDir, fileName);
-        if(!Files.exists(uploadPath)) {
+        if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
-        try(InputStream inputStream = multipartFile.getInputStream()) {
+        try (InputStream inputStream = multipartFile.getInputStream()) {
             Path path = uploadPath.resolve(fileName);
-            System.out.println("FilePath"+path);
-            System.out.println("FileName "+fileName);
-            Files.copy(inputStream,path, StandardCopyOption.REPLACE_EXISTING);
-        }
-        catch(IOException ioException) {
-            throw new IOException("Could not save image file"+ fileName, ioException);
+            System.out.println("FilePath" + path);
+            System.out.println("FileName " + fileName);
+            Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ioException) {
+            throw new IOException("Could not save image file" + fileName, ioException);
         }
     }
 }
