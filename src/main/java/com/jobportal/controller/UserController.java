@@ -43,7 +43,7 @@ public class UserController {
     @PostMapping("/register/new")
     public String userRegistration(@Valid User user, Model model) {
         Optional<User> optionalUser = userService.getUserByEmail(user.getEmail());
-        if(optionalUser.isPresent()){
+        if (optionalUser.isPresent()) {
             model.addAttribute("error", "Email is already in use");
             List<UserType> userTypes = userTypeService.getAll();
             model.addAttribute("getAllTypes", userTypes);
@@ -53,6 +53,7 @@ public class UserController {
         userService.addNew(user);
         return "redirect:/dashboard/";
     }
+
     @GetMapping("/login")
     public String login() {
         return "login";
@@ -62,7 +63,7 @@ public class UserController {
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(authentication != null){
+        if (authentication != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
         return "redirect:/";

@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 @Entity
-@Table(name= "recruiter_profile")
+@Table(name = "recruiter_profile")
 @Data
 @ToString
 public class RecruiterProfile {
@@ -49,11 +49,11 @@ public class RecruiterProfile {
     }
 
     @Transient
-    public String getPhotosImagePath(){
-        if(profilePhoto == null){
+    public String getPhotosImagePath() {
+        if (profilePhoto == null) {
             return null;
         }
-        String imagePath = "/photos/recruiter/" + userAccountId + "/" + profilePhoto;;
+        String imagePath = "/photos/recruiter/" + userAccountId + "/" + profilePhoto;
         return imagePath;
     }
 }

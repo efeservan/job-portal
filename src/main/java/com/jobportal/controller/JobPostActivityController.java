@@ -41,9 +41,9 @@ public class JobPostActivityController {
             String currentUserName = authentication.getName();
             model.addAttribute("username", currentUserName);
             if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("Recruiter"))) {
-               List<RecruiterJobsDto> recruiterJobs =
-                       jobPostActivityService.getRecruiterJobs(((RecruiterProfile) currentUserProfile).getUserAccountId());
-               model.addAttribute("jobPost", recruiterJobs);
+                List<RecruiterJobsDto> recruiterJobs =
+                        jobPostActivityService.getRecruiterJobs(((RecruiterProfile) currentUserProfile).getUserAccountId());
+                model.addAttribute("jobPost", recruiterJobs);
             }
         }
         model.addAttribute("user", currentUserProfile);
@@ -70,7 +70,7 @@ public class JobPostActivityController {
     }
 
     @PostMapping("/dashboard/edit/{id}")
-    public String edit(@PathVariable("id") Long id,Model model) {
+    public String edit(@PathVariable("id") Long id, Model model) {
 
         JobPostActivity jobPostActivity = jobPostActivityService.getOne(id);
         model.addAttribute("jobPostActivity", jobPostActivity);

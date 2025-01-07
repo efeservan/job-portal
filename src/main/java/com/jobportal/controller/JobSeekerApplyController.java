@@ -18,10 +18,10 @@ public class JobSeekerApplyController {
     private final UserService userService;
 
     @GetMapping("/job-details-apply/{id}")
-    public String display(@PathVariable("id") Long id, Model model){
+    public String display(@PathVariable("id") Long id, Model model) {
         JobPostActivity jobDetails = jobPostActivityService.getOne(id);
         model.addAttribute("jobDetails", jobDetails);
-        model.addAttribute("user",userService.getCurrentUserProfile());
+        model.addAttribute("user", userService.getCurrentUserProfile());
         return "job-details";
     }
 
