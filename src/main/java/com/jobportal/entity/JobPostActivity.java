@@ -19,6 +19,7 @@ public class JobPostActivity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "job_post_id")
     private Long jobPostId;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -26,11 +27,11 @@ public class JobPostActivity {
     private User postedById;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="jobLocationId", referencedColumnName = "Id")
+    @JoinColumn(name="jobLocationId", referencedColumnName = "id")
     private JobLocation jobLocationId;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "jobCompanyId", referencedColumnName = "Id")
+    @JoinColumn(name = "jobCompanyId", referencedColumnName = "id")
     private JobCompany jobCompanyId;
 
     @Transient
@@ -53,4 +54,19 @@ public class JobPostActivity {
 
     private String jobTitle;
 
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean active) {
+        isActive = active;
+    }
+
+    public boolean getIsSaved() {
+        return isSaved;
+    }
+
+    public void setIsSaved(boolean saved) {
+        isSaved = saved;
+    }
 }

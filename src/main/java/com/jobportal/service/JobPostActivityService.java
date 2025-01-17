@@ -9,8 +9,10 @@ import com.jobportal.repository.JobPostActivityRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -37,5 +39,14 @@ public class JobPostActivityService {
 
     public JobPostActivity getOne(Long id) {
         return jobPostActivityRepository.findById(id).orElseThrow(() -> new RuntimeException("Job not found with the : " + id + "id"));
+    }
+
+    public List<JobPostActivity> getAll() {
+        return jobPostActivityRepository.findAll();
+    }
+
+    public List<JobPostActivity> search(String job, String location, List<String> type, List<String> remote, LocalDate searchDate) {
+        return Objects.isNull(searchDate) ? jobPostActivityRepository.searchWithoutDate(job, location, type, remote) :
+                jobPostActivityRepository.search(job, location, type, remote, searchDate);
     }
 }

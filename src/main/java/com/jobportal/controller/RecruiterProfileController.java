@@ -42,7 +42,7 @@ public class RecruiterProfileController {
             User user = userRepository.findByEmail(currentUserName).orElseThrow(
                     () -> new UsernameNotFoundException("User Not Found: " + currentUserName));
             Optional<RecruiterProfile> recruiterProfile =
-                    recruiterProfileService.getRecruiterProfile(user.getUserId());
+                    recruiterProfileService.getOne(user.getUserId());
             if (!recruiterProfile.isEmpty()) {
                 model.addAttribute("profile", recruiterProfile.get());
             }
