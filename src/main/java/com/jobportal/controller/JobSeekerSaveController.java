@@ -46,7 +46,7 @@ public class JobSeekerSaveController {
             }
             jobSeekerSaveService.addNew(jobSeekerSave);
         }
-        return "redirect:/dashboard";
+        return "redirect:/dashboard/";
     }
 
     @GetMapping("saved-jobs/")
