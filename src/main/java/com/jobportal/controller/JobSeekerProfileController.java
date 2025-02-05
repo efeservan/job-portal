@@ -5,8 +5,14 @@ import com.jobportal.entity.Skill;
 import com.jobportal.entity.User;
 import com.jobportal.repository.UserRepository;
 import com.jobportal.service.JobSeekerProfileService;
+import com.jobportal.util.FileDownloadUtil;
 import com.jobportal.util.FileUploadUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,10 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -106,6 +109,55 @@ public class JobSeekerProfileController {
             throw new RuntimeException(ex);
         }
         return "redirect:/dashboard/";
+    }
+
+    @GetMapping("/{id}")
+    public String getCandidateProfile(@PathVariable("id") Long id, Model model) {
+        Optional<JobSeekerProfile> jobSeekerProfile = jobSeekerProfileService.getOne(id);
+        model.addAttribute("profile", jobSeekerProfile.get());
+        return "job-seeker-profile";
+    }
+
+//    @GetMapping("downloadResume")
+//    public ResponseEntity<?> downloadResume(@RequestParam(value = "fileName") String fileName,
+//                                            @RequestParam(value = "userID") String userId) {
+//        FileDownloadUtil fileDownloadUtil = new FileDownloadUtil();
+//        Resource resource = null;
+//        try {
+//            resource = fileDownloadUtil.getFileAsResource("photos/candidate/"+ userId, fileName);
+//            if (resource == null || !resource.exists()) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dosya bulunamadı.");
+//            }
+//            return ResponseEntity.ok()
+//                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+//                    .body(resource);
+//        } catch (IOException e) {
+//            e.printStackTrace(); // Hata loglama
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Dosya indirilirken bir hata oluştu.");
+//        }
+//    }
+
+    @GetMapping("/downloadResume")
+    public ResponseEntity<?> downloadResume(@RequestParam(value = "fileName") String fileName,
+                                            @RequestParam(value = "userID") String userId) {
+        FileDownloadUtil fileDownloadUtil = new FileDownloadUtil();
+        Resource resource = null;
+
+        try {
+            resource = fileDownloadUtil.getFileAsResource("photos/candidate/" + userId, fileName);
+        } catch (IOException e) {
+            e.printStackTrace(); // Hata loglama
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Dosya indirilirken bir hata oluştu.");
+        }
+        if (resource == null || !resource.exists()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dosya bulunamadı.");
+        }
+        String contentType = "application/octet-stream";
+        String headerValue = "attachment; filename=\"" + resource.getFilename() + "\"";
+
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
+                .body(resource);
     }
 
 }

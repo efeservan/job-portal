@@ -20,7 +20,7 @@ public class JobSeekerProfileService {
     private final JobSeekerProfileRepository jobSeekerProfileRepository;
     private final UserRepository userRepository;
 
-    public Optional<JobSeekerProfile> getOne(Long id){
+    public Optional<JobSeekerProfile> getOne(Long id) {
         return jobSeekerProfileRepository.findById(id);
     }
 
@@ -30,12 +30,13 @@ public class JobSeekerProfileService {
 
     public JobSeekerProfile getCurrentJobSeekerProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(!(authentication instanceof AnonymousAuthenticationToken)){
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUserName = authentication.getName();
-            User user = userRepository.findByEmail(currentUserName).orElseThrow(()->
+            User user = userRepository.findByEmail(currentUserName).orElseThrow(() ->
                     new UsernameNotFoundException("User Not Found"));
             Optional<JobSeekerProfile> jobSeekerProfile = getOne(user.getUserId());
             return jobSeekerProfile.orElse(null);
-        }else return null;
+        } else
+            return null;
     }
 }
